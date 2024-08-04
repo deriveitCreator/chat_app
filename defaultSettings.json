@@ -1,0 +1,11 @@
+{
+  "youtubeID": "",
+  "twitchID": "",
+  "dateTime":"",
+  "bgColor": "#111111",
+  "hoverColor":"#222222",
+  "borderColor":"#222222",
+  "textColor":"#444477",
+  "opacity":"1",
+  "bodyBorderWidth": "4px"
+}

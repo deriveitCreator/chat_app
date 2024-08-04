@@ -1,6 +1,6 @@
 {
-  "name": "chat_app",
-  "version": "1.0.0",
+  "name": "uchat",
+  "version": "2.0.0",
   "description": "An app for viewing chats of a stream",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,13 @@
     "electron": "^31.3.1"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "@eastdesire/jscolor": "^2.5.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2",
+    "electron-drag": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.1",
+    "jsonfile": "^6.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

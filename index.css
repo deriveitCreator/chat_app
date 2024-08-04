@@ -1,0 +1,362 @@
+:root {
+  --bgColor: #111;
+  --hoverColor: #222;
+  --borderColor: #222;
+  --textColor: #447;
+  --footerHeight: 60px;
+  --opacityAnimation: opacityChange 0.5s linear 0s 1 normal forwards;
+  --bodyBorderWidth: 4px;
+}
+
+@keyframes opacityChange{
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+body{
+  margin: 0;
+  font-family: "DM Sans";
+  color: var(--textColor);
+  overflow: hidden;
+  width: 100vw;
+  border: var(--borderColor) solid var(--bodyBorderWidth);
+  box-sizing: border-box;
+
+  button{
+    font-family: "DM Sans";
+    background-color: var(--bgColor);
+    cursor: pointer;
+    color: var(--textColor);
+    font-weight: bold;
+    border: var(--borderColor) solid 3px;
+
+    &:hover, &:focus{
+      background-color: var(--hoverColor);
+      outline: none
+    }
+  }
+
+  input, textarea{
+    font-family: "DM Sans";
+    background-color: var(--bgColor);
+    outline: none;
+    border: none;
+    color: var(--textColor);
+    font-weight: bold;
+    resize: none;
+  }
+
+  #options{
+    position: absolute;
+    width: calc(100% - (var(--bodyBorderWidth) * 2));
+    left: var(--bodyBorderWidth);
+    top: var(--bodyBorderWidth);
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+    justify-content: space-evenly;
+    background: var(--bgColor);
+    border-bottom: var(--borderColor) solid 4px;
+    user-select: none;
+    transition: opacity 0.5s;
+
+    button, #dragDiv{
+      border: none;
+      font-size: 14px;
+      height: min-content;
+      line-height: 28px;
+      padding: 0;
+    }
+
+    #dragDiv{
+      font-family: "DM Sans";
+      background-color: var(--bgColor);
+      color: var(--textColor);
+      font-weight: bold;
+      text-align: center;
+      border-left: var(--borderColor) solid 2px;
+      border-right: var(--borderColor) solid 2px;
+      -webkit-app-region: drag;
+    }
+
+    #onTopButton{
+      border-top: var(--borderColor) solid 2px;
+      grid-column: 1 / span 3;
+    }
+
+  }
+
+  .material-symbols-rounded{
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 40;
+    color: var(--textColor);
+  }
+
+  .material-symbols-outlined{
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    color: var(--textColor);
+  }
+
+  #main{
+    width: 100%;
+    min-width: 290px;
+    height: calc(100vh - (var(--bodyBorderWidth) * 2));
+    overflow-y: auto;
+    display: flex;
+    justify-content: space-around;
+
+    #streamConnectForm, #appearanceSettingsForm{
+      padding-top: 80px;
+      box-sizing: border-box;
+      opacity: 0;
+      animation: var(--opacityAnimation);
+
+      label{
+        padding-top: 20px;
+        font-weight: bold;
+        font-size: 28px;
+      }
+
+      .inputContainer{
+        margin-top: 10px;
+        margin-bottom: 20px;
+
+        input{
+          font-size: 15px;
+          display: block;
+          float: left;
+          border-bottom: var(--borderColor) solid 3px;
+        }
+      
+        .tickContainer{
+          display: block;
+          float: right;
+        }
+
+        &::after{
+          content: " ";
+          clear: both;
+          display: block;
+        }
+
+      }
+
+      #buttonsSection{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        padding-bottom: 100px;
+
+        button{
+          margin-top: 20px;
+          font-size: 15px;
+          height: 28px;
+          border-radius: 14px;
+          
+          &[data-disabled=true]:hover{
+            background-color: var(--bgColor);
+            cursor: default;
+          }
+        }
+      }
+
+      input[type=range]{
+        -webkit-appearance: none;
+        appearance: none;
+        width: 80%;
+        margin-left: 10%;
+        background: var(--borderColor);
+        outline: none;
+        height: 2px;
+        border-radius: 1px;  
+        
+        &::-webkit-slider-thumb{
+          -webkit-appearance: none;
+          appearance: none;
+          background: var(--textColor);
+          cursor: pointer;
+          height: 12px;
+          width: 12px;
+          border-radius: 6px;
+          margin-top: 2px;
+        }
+
+        &::-moz-range-thumb{
+          -webkit-appearance: none;
+          appearance: none;
+          background: var(--textColor);
+          cursor: pointer;
+          height: 12px;
+          width: 12px;
+          border-radius: 6px;
+          margin-top: 2px;
+        }
+      }
+
+    }
+
+    #chatDiv{
+      padding-top: 60px;
+      opacity: 0;
+      animation: var(--opacityAnimation);
+      font-weight: bold;
+    }
+
+    &::-webkit-scrollbar{
+      display: none;
+    }
+
+  }
+
+  #footer{
+    width: calc(100% - (var(--bodyBorderWidth) * 2));
+    display: flex;
+    justify-content: space-evenly;
+    height: var(--footerHeight);
+    border-top: var(--borderColor) solid 4px;
+    box-sizing: border-box;
+    align-items: center;
+    background-color: var(--bgColor);
+    transition: opacity 0.5s;
+    position: absolute;
+    left: var(--bodyBorderWidth);
+    bottom: var(--bodyBorderWidth);
+
+    button{
+      height: 44px;
+      width: 44px;
+      border-radius: 22px;
+      padding: 0;
+      opacity: 0;
+      animation: var(--opacityAnimation);
+
+      .material-symbols-rounded{
+        font-size: 28px;
+        line-height: 38px;
+        justify-content: center;
+        height: 38px;
+        width: 38px;
+        cursor: pointer;
+      }
+    }
+
+    #userText{
+      color: var(--textColor);
+      width: calc(100vw - 70px);
+      opacity: 0;
+      animation: var(--opacityAnimation);
+      font-size: 16px;
+
+      &::-webkit-scrollbar{
+        display: none;
+      }
+
+      &::placeholder {
+        color: var(--textColor) !important;
+        font-weight: normal;
+        font-style: italic;
+      }
+    }
+  }
+
+  .flatpickr-calendar{
+    font-family: "DM Sans";
+    background-color: var(--bgColor);
+    -webkit-box-shadow:
+      1px 0 0 var(--borderColor),
+      -1px 0 0 var(--borderColor),
+      0 1px 0 var(--borderColor),
+      0 -1px 0 var(--borderColor),
+      0 3px 13px rgba(0, 0, 0, 0.08);
+    box-shadow:
+      1px 0 0 var(--borderColor),
+      -1px 0 0 var(--borderColor),
+      0 1px 0 var(--borderColor),
+      0 -1px 0 var(--borderColor),
+      0 3px 13px rgba(0, 0, 0, 0.08);
+
+    &::before, &::after{
+      content: none;
+    }
+
+    .flatpickr-months{
+      * {
+        color: var(--textColor) !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        fill: var(--textColor) !important;
+      }
+      
+      .flatpickr-month{
+        height: 30px;
+
+        .flatpickr-current-month{
+          padding-top: 5px;
+        }
+      }
+
+      .flatpickr-prev-month, .flatpickr-next-month{
+        height: 30px;
+        padding: 6px 10px;
+      }
+    }
+
+    .flatpickr-innerContainer{
+
+      span.flatpickr-weekday{
+        color: var(--textColor);
+      }
+  
+      .flatpickr-day{
+        color: var(--textColor);
+        font-weight: bold;
+  
+        &:hover{
+          background-color: var(--hoverColor);
+          border-color: var(--borderColor);
+        }
+  
+        &.today{
+          border-color: var(--borderColor);
+        }
+
+        &.selected{
+          background-color: var(--borderColor);
+          border-color: var(--borderColor);
+        }
+  
+        &.prevMonthDay, &.nextMonthDay{
+          opacity: 0.5;
+        }
+      }
+
+    }
+
+    .flatpickr-time{
+      border-top-color: var(--borderColor) !important;
+
+      input:hover{
+        background-color: var(--hoverColor);
+      }
+
+      input:focus{
+        background-color: var(--hoverColor);
+      }
+
+      .numInput{
+        color: var(--textColor);
+        font-weight: bold;
+      }
+  
+      .flatpickr-am-pm{
+        color: var(--textColor);
+        font-weight: bold;
+
+        &:hover{
+          background-color: var(--hoverColor);
+        }
+      }
+
+    }
+
+  }
+}
