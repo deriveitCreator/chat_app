@@ -1,28 +1,8 @@
 
-<form id="streamConnectForm">
-  <label for="youtubeID">Youtube Stream ID:</label>
-  <br/>
-  <div class="inputContainer">
-    <input type="text" name="youtubeID" onkeyup="setYoutubeID(event)"/>
-    <div class="tickContainer">
-      <span class="material-symbols-outlined">check_circle</span>
-    </div>
+<div id="streamConnectForm">
+  <div id="selectMode">
+    <button id="readOnlyButton" tabindex="-1" onclick="clickedReadOnly()">Read only</button>
+    <button id="readWriteButton" tabindex="0" onclick="clickedReadWrite()">Read and write</button>
   </div>
-  <br/>
-  <label for="twitchID">Twitch Stream ID:</label>
-  <br/>
-  <div class="inputContainer">
-    <input type="text" name="twitchID" onkeyup="setTwitchID(event)"/>
-    <div class="tickContainer">
-      <span class="material-symbols-outlined">check_circle</span>
-    </div>
-  </div>
-  <br/>
-  <label for="dateTime">Set date and time:</label>
-  <div class="inputContainer">
-    <input type="datetime-local" name="dateTime" onchange="setDateTime(event)">
-  </div>
-  <div id="buttonsSection">
-    <button onclick="saveSettings(event)" id="saveButton" title="For the next time you open this app">Save</button>
-  </div>
-</form>
+  <div id="formContainer"></div>
+</div>

@@ -4,27 +4,33 @@
   <div class="inputContainer">
     <input name="bgColor" id="bgColor" onchange="setBgColor(event)" data-jscolor="" />
   </div>
-  <br/>
   <label for="hoverColor">Hover Color:</label>
   <div class="inputContainer">
     <input name="hoverColor" id="hoverColor" onchange="setHoverColor(event)" data-jscolor="" />
   </div>
-  <br/>
   <label for="borderColor">Border Color:</label>
   <div class="inputContainer">
     <input name="borderColor" id="borderColor" onchange="setBorderColor(event)" data-jscolor="" />
   </div>
-  <br/>
   <label for="textColor">Text Color:</label>
   <div class="inputContainer">
     <input name="textColor" id="textColor" onchange="setTextColor(event)" data-jscolor="" />
   </div>
-  <br/>
+  <label for="chatFontSize">Chat Font Size:</label>
+  <div class="inputContainer">
+    <input name="chatFontSize" id="chatFontSize" onclick="toggleChatFontOptions()" readonly></input>
+    <ul id="chatFontOptions">
+      <li onclick="setFontSize('12px')">Very Small</li>
+      <li onclick="setFontSize('14px')">Small</li>
+      <li onclick="setFontSize('16px')">Normal</li>
+      <li onclick="setFontSize('18px')">Big</li>
+      <li onclick="setFontSize('20px')">Very Big</li>
+    </ul>
+  </div>
   <label for="opacity">Opacity:</label>
   <div class="inputContainer">
     <input name="opacity" id="opacityRange" type="range" min="0" max="1" step="0.1" onchange="setOpacity(event)" />
   </div>
-  <br/>
   <div id="buttonsSection">
     <button onclick="toggleBorder(event)" id="toggleBorderButton" title="Toggle Border">Border</button>
     <button onclick="resetAppearance(event)" title="Reset to default">Reset</button>

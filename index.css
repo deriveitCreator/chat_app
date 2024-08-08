@@ -3,6 +3,7 @@
   --hoverColor: #222;
   --borderColor: #222;
   --textColor: #447;
+  --chatFontSize: 16px;
   --footerHeight: 60px;
   --opacityAnimation: opacityChange 0.5s linear 0s 1 normal forwards;
   --bodyBorderWidth: 4px;
@@ -99,7 +100,8 @@ body{
   #main{
     width: 100%;
     min-width: 290px;
-    height: calc(100vh - (var(--bodyBorderWidth) * 2));
+    padding-bottom: var(--footerHeight);
+    height: calc(100vh - ((var(--bodyBorderWidth) * 2) + var(--footerHeight)));
     overflow-y: auto;
     display: flex;
     justify-content: space-around;
@@ -110,7 +112,41 @@ body{
       opacity: 0;
       animation: var(--opacityAnimation);
 
+      #readOnlyForm, #readWriteForm{
+        opacity: 0;
+        animation: var(--opacityAnimation);
+      }
+
+      #selectMode{
+        width: 100%;
+        border: solid 2px var(--borderColor);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-around;
+        border-radius: 10px;
+        padding: 4px;
+
+        button{
+          font-size: 14px;
+          border: none;
+          height: 25px;
+          flex-grow: 1;
+          border-radius: 6px;
+
+          &[tabindex="-1"]{
+            background-color: var(--hoverColor);
+            cursor: default;
+          }
+
+          &[tabindex="0"]:hover{
+            background-color: var(--bgColor);
+            cursor: pointer;
+          }
+        }
+      }
+
       label{
+        display: block;
         padding-top: 20px;
         font-weight: bold;
         font-size: 28px;
@@ -119,6 +155,7 @@ body{
       .inputContainer{
         margin-top: 10px;
         margin-bottom: 20px;
+        position: relative;
 
         input{
           font-size: 15px;
@@ -126,16 +163,42 @@ body{
           float: left;
           border-bottom: var(--borderColor) solid 3px;
         }
-      
-        .tickContainer{
-          display: block;
-          float: right;
-        }
 
         &::after{
           content: " ";
           clear: both;
           display: block;
+        }
+
+        #chatFontSize{
+          cursor: pointer;
+          font-size: 15px;
+        }
+        
+        #chatFontOptions{
+          background-color: var(--bgColor);
+          border: var(--borderColor) 2px solid;
+          list-style: none;
+          position: absolute;
+          display: none;
+          font-size: 15px;
+          font-weight: bold;
+          top: 10px;
+          left: 5px;
+          padding: 0px 5px;
+          z-index: 10;
+
+          li{
+            height: 22px;
+            padding-right: 2px;
+            cursor: pointer;
+
+          }
+
+          li:hover{
+            padding-left: 2px;
+            padding-right: 0px;
+          }
         }
 
       }
@@ -195,10 +258,25 @@ body{
     }
 
     #chatDiv{
-      padding-top: 60px;
+      padding: 60px 10px 0px;
+      margin-bottom: 0px;
       opacity: 0;
       animation: var(--opacityAnimation);
       font-weight: bold;
+      width: 100%;
+      list-style: none;
+      height: min-content;
+      
+      li{
+        border-top: var(--borderColor) 2px solid;
+        font-size: var(--chatFontSize);
+        word-break: break-word;
+        white-space: pre-wrap;
+
+        #nameContainer{
+          background-color: var(--hoverColor);
+        }
+      }
     }
 
     &::-webkit-scrollbar{
@@ -256,107 +334,5 @@ body{
         font-style: italic;
       }
     }
-  }
-
-  .flatpickr-calendar{
-    font-family: "DM Sans";
-    background-color: var(--bgColor);
-    -webkit-box-shadow:
-      1px 0 0 var(--borderColor),
-      -1px 0 0 var(--borderColor),
-      0 1px 0 var(--borderColor),
-      0 -1px 0 var(--borderColor),
-      0 3px 13px rgba(0, 0, 0, 0.08);
-    box-shadow:
-      1px 0 0 var(--borderColor),
-      -1px 0 0 var(--borderColor),
-      0 1px 0 var(--borderColor),
-      0 -1px 0 var(--borderColor),
-      0 3px 13px rgba(0, 0, 0, 0.08);
-
-    &::before, &::after{
-      content: none;
-    }
-
-    .flatpickr-months{
-      * {
-        color: var(--textColor) !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-        fill: var(--textColor) !important;
-      }
-      
-      .flatpickr-month{
-        height: 30px;
-
-        .flatpickr-current-month{
-          padding-top: 5px;
-        }
-      }
-
-      .flatpickr-prev-month, .flatpickr-next-month{
-        height: 30px;
-        padding: 6px 10px;
-      }
-    }
-
-    .flatpickr-innerContainer{
-
-      span.flatpickr-weekday{
-        color: var(--textColor);
-      }
-  
-      .flatpickr-day{
-        color: var(--textColor);
-        font-weight: bold;
-  
-        &:hover{
-          background-color: var(--hoverColor);
-          border-color: var(--borderColor);
-        }
-  
-        &.today{
-          border-color: var(--borderColor);
-        }
-
-        &.selected{
-          background-color: var(--borderColor);
-          border-color: var(--borderColor);
-        }
-  
-        &.prevMonthDay, &.nextMonthDay{
-          opacity: 0.5;
-        }
-      }
-
-    }
-
-    .flatpickr-time{
-      border-top-color: var(--borderColor) !important;
-
-      input:hover{
-        background-color: var(--hoverColor);
-      }
-
-      input:focus{
-        background-color: var(--hoverColor);
-      }
-
-      .numInput{
-        color: var(--textColor);
-        font-weight: bold;
-      }
-  
-      .flatpickr-am-pm{
-        color: var(--textColor);
-        font-weight: bold;
-
-        &:hover{
-          background-color: var(--hoverColor);
-        }
-      }
-
-    }
-
   }
 }

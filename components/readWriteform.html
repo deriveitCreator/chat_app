@@ -1,0 +1,11 @@
+
+<form id="readWriteForm">
+  <label for="youtubeID">Youtube Stream ID:</label>
+  <div class="inputContainer">
+    <input type="text" id="youtubeID" onkeyup="saveSetting(event)"/>
+  </div>
+  <div id="buttonsSection">
+    <button onclick="setStreamSettings(event)" id="setButton">Set</button>
+    <button onclick="saveSettings(event)" id="saveButton" title="For the next time you open this app">Save</button>
+  </div>
+</form>
