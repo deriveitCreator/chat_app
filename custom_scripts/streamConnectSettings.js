@@ -1,79 +1,115 @@
-
+var youtubeId = null;
 var activeLiveChatId = null;
-var continueChatLoop = false;
-var readOnlyMode = true;
+var backendURL = "https://django-apps.vercel.app/uchat_backend/";
+var token = null;
+var tokenExpiry = null;
+var refreshToken = null;
 
-function setStreamSettings(event){
+function oauthSignIn(event) {
   event.preventDefault();
-
-  for(streamConnectElId of ["apiKey","youtubeID"])
-    settings[streamConnectElId] = document.getElementById(streamConnectElId).value;
-
-  if(document.getElementById("readOnlyButton").getAttribute("tabindex") === "-1")
-    readOnlyMode = false;
-  else readOnlyMode = true;
-
-  setLiveChatID(settings["youtubeID"], settings["apiKey"]);
-}
-
-function setLiveChatID(youtubeID, apiKey){
-  fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=liveStreamingDetails,snippet&id=${youtubeID}&key=${apiKey}`)
+  fetch(backendURL + "/authorize")
   .then(res => res.json())
   .then(res => {
-    let itemsDetails = res.items[0];
-    if(itemsDetails.snippet.liveBroadcastContent !== "live"){
-      activeLiveChatId = null;
-      alert("Please use a Youtube stream that is currently live.");
+    window.electronAPI.googleSignIn(res.authorization_url);
+  });
+}
+
+window.electronAPI.onGotMessage((obj) => {
+  token = obj.token;
+  tokenExpiry = new Date(obj.expiry + "Z");
+  refreshToken = obj.refresh_token;
+  alert("Successfully signed in.");
+  if (youtubeId) setLiveChatId();
+})
+
+function connectStream(event){
+  event.preventDefault();
+  let connectButton = document.getElementById("connectButton");
+  connectButton.setAttribute("disabled","true");
+  activeLiveChatId = null;
+  youtubeId = document.getElementById("youtubeId").value;
+  window.electronAPI.setPage(youtubeId);
+}
+
+window.electronAPI.setPageCallBack((success)=>{
+  if (success) {
+    alert("Connected!");
+    if (token) setLiveChatId();
+  }
+  else alert("Error connecting to live stream!");
+  let connectButton = document.getElementById("connectButton");
+  if (connectButton)
+    document.getElementById("connectButton").removeAttribute("disabled");
+})
+
+function setLiveChatId(){
+  fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2C%20liveStreamingDetails&id=${youtubeId}&access_token=${token}`)
+  .then(res => res.json())
+  .then(res => {
+    let item = res.items[0];
+    if(item.snippet.liveBroadcastContent === 'live') {
+      activeLiveChatId = item.liveStreamingDetails.activeLiveChatId;
+      alert("Since you signed in, you can send messages to stream.");
+    }
+    else{
+      alert("Connection Error.\nPlease check if this is a valid live stream ID.");
+    };
+    connectButton.removeAttribute("disabled");
+  })
+  .catch(res => {
+    console.log("response:", res);
+    alert("There was an error.");
+    connectButton.removeAttribute("disabled");
+  });
+}
+
+function sendMessage(){
+  var userTextEl = document.getElementById("userText");
+  var userText = userTextEl.value;
+  userTextEl.value = "";
+  fetch(`https://youtube.googleapis.com/youtube/v3/liveChat/messages?part=snippet&access_token=${token}`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      "snippet": {
+        "liveChatId": activeLiveChatId,
+        "type": "textMessageEvent",
+        "textMessageDetails": {
+          "messageText": userText
+        }
+      }
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Error sending message.")
+  })
+  .catch(err => {
+    alert(err);
+  });
+  setTimerValOnSendButton(25);
+}
+
+function setTimerValOnSendButton(sec){
+  let sendButtonEl = document.getElementById("sendButton");
+  if (sendButtonEl) {
+    if (sec > 0){
+      sendButtonEl.removeAttribute("onclick");
+      sendButtonEl.textContent = sec;
+      sendButtonEl.setAttribute("data-disabled", true);
+      setTimeout(setTimerValOnSendButton, 1000, sec-1);
     }
     else {
-      activeLiveChatId = itemsDetails.liveStreamingDetails.activeLiveChatId;
-      alert("Youtube stream successfully connected.");
+      sendButtonEl.textContent = "";
+      let innerSpan = document.createElement("span");
+      innerSpan.classList.add("material-symbols-rounded");
+      innerSpan.textContent = "Send"
+      sendButtonEl.append(innerSpan);
+      sendButtonEl.removeAttribute("data-disabled");
+      sendButtonEl.onclick = sendMessage;
     }
-  })
-  .catch(alert("Error setting Youtube stream"));
-}
-
-async function chatLoop(curNPT = null){
-  var url;
-  if(curNPT)
-    url = `https://youtube.googleapis.com/youtube/v3/liveChat/messages?liveChatId=${activeLiveChatId}&part=authorDetails,snippet&key=${settings["apiKey"]}&pageToken=${curNPT}`;
-  else
-    url = `https://youtube.googleapis.com/youtube/v3/liveChat/messages?liveChatId=${activeLiveChatId}&part=authorDetails,snippet&key=${settings["apiKey"]}&maxResults=5`;
-
-  let response = await fetch(url)
-  .then(res => res.json())
-  .catch(err => {
-    console.log(err);
-    continueChatLoop = true;
-  });
-
-  if(!continueChatLoop) return null;
-
-  if(response.items.length){
-    for(item of response.items){
-      if(!continueChatLoop) break;
-      let curName = item.authorDetails.displayName;
-      let curMessage = item.snippet.displayMessage;
-      addMessageToChatDiv(curName, curMessage);
-    }
-  }
-
-  setTimeout(()=>chatLoop(response.nextPageToken), response.pollingIntervalMillis);
-}
-
-
-function clickedReadOnly(){
-  if(document.getElementById("readWriteButton").getAttribute("tabindex") === "-1"){
-    document.getElementById("readOnlyButton").setAttribute("tabindex","-1");
-    document.getElementById("readWriteButton").setAttribute("tabindex","0");
-    setReadOnlyFormEl();
-  }
-}
-
-function clickedReadWrite(){
-  if(document.getElementById("readOnlyButton").getAttribute("tabindex") === "-1"){
-    document.getElementById("readWriteButton").setAttribute("tabindex","-1");
-    document.getElementById("readOnlyButton").setAttribute("tabindex","0");
-    setReadWriteFormEl();
   }
 }

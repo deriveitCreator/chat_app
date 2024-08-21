@@ -1,8 +1,16 @@
 
-<div id="streamConnectForm">
-  <div id="selectMode">
-    <button id="readOnlyButton" tabindex="-1" onclick="clickedReadOnly()">Read only</button>
-    <button id="readWriteButton" tabindex="0" onclick="clickedReadWrite()">Read and write</button>
+
+<form id="streamConnectForm">
+  <label for="googleSignInButton" class="radioLabel">Google Sign In:</label>
+  <small>(For sending messages)</small>
+  <div class="buttonsSection"> 
+    <button name="googleSignInButton" onclick="oauthSignIn(event)">Sign In</button>
   </div>
-  <div id="formContainer"></div>
-</div>
+  <label for="youtubeId" id="youtubeLabel">Youtube Stream ID:</label> 
+  <div class="inputContainer"> 
+    <input type="text" id="youtubeId"/> 
+  </div>
+  <div class="buttonsSection"> 
+    <button id="connectButton" onclick="connectStream(event)">Connect</button> 
+  </div>
+</form>

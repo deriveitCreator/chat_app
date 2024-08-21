@@ -2,7 +2,7 @@
 <form id="appearanceSettingsForm">
   <label for="bgColor">Background Color:</label>
   <div class="inputContainer">
-    <input name="bgColor" id="bgColor" onchange="setBgColor(event)" data-jscolor="" />
+    <input name="bgColor" id="bgColor" onchange="setBgColor(event)" data-jscolor=""/>
   </div>
   <label for="hoverColor">Hover Color:</label>
   <div class="inputContainer">
@@ -29,9 +29,9 @@
   </div>
   <label for="opacity">Opacity:</label>
   <div class="inputContainer">
-    <input name="opacity" id="opacityRange" type="range" min="0" max="1" step="0.1" onchange="setOpacity(event)" />
+    <input name="opacity" id="opacity" type="range" min="0" max="1" step="0.1" onchange="setOpacity(event)" />
   </div>
-  <div id="buttonsSection">
+  <div class="buttonsSection">
     <button onclick="toggleBorder(event)" id="toggleBorderButton" title="Toggle Border">Border</button>
     <button onclick="resetAppearance(event)" title="Reset to default">Reset</button>
     <button onclick="saveSettings(event)" id="saveButton" title="For the next time you open this app">Save</button>

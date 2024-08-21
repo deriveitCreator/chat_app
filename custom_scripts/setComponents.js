@@ -28,74 +28,79 @@ function setFooterEl1(){
 
 const setFooterEl2 = () => setElement(footer2, "footer", "footer2", setChatDiv);
 
-const setChatDiv = () => setElement(chatDivEl, "main", "chatDiv", afterSetChatDiv);
+function setChatDiv() {
+  if(!document.getElementById("chatDiv"))
+    setElement(chatDivEl, "main", "chatDiv", afterSetChatDiv)
+};
 
 function afterSetChatDiv(){
-  if(activeLiveChatId) {
-    if(readOnlyMode) {
-      document.getElementById("userText").setAttribute("placeholder","No input in read-only mode");
-      document.getElementById("userText").setAttribute("disabled","true");
-    }
-    else{
-      document.getElementById("userText").setAttribute("placeholder","Your message here...");
-      document.getElementById("userText").setAttribute("disabled","false");
-    }
-    continueChatLoop = true;
-    chatLoop();
+  if (youtubeId) {
+    if(activeLiveChatId && token)
+      changeUserTextEl("Your message here...", false);
+    else 
+      changeUserTextEl("Need to sign in to send messages", true);
+    window.electronAPI.startChatLoop();
   }
-  else{
+  else {
     let newLi = document.createElement("li");
+    newLi.style.marginTop = "20px";
     newLi.style.border = "none";
     newLi.textContent = "Please fill out the streaming connect information.";
     document.getElementById("chatDiv").appendChild(newLi);
   }
 }
 
-function addMessageToChatDiv(name, content){
-  let newLi = document.createElement("li");
-  let nameSpan = document.createElement("span");
-  nameSpan.textContent = ` ${name} `;
-  nameSpan.id = "nameContainer";
-  nameSpan.title = "The background color here is the same as the hover color."
-  newLi.appendChild(nameSpan);
-  newLi.appendChild(document.createTextNode(" " + content));
-  document.getElementById("chatDiv").appendChild(newLi);
-  newLi.scrollIntoView(scrollIntoViewOptions = {behavior: "smooth"});
+function changeUserTextEl(msg, disabledState){
+  let userTextEl = document.getElementById("userText");
+  if (userTextEl) {
+    userTextEl.setAttribute("placeholder", msg);
+    if (disabledState) userTextEl.setAttribute("disabled", disabledState);
+    else {
+      userTextEl.removeAttribute("disabled");
+      userTextEl.focus();
+    }
+  }
 }
 
-const setStreamConnectFormEl =
-  () => setElement(streamConnectFormEl, "main", "streamConnectForm", afterSetStreamConnectFormEl);
 
-function afterSetStreamConnectFormEl(){
-  continueChatLoop = false;
-  setReadOnlyFormEl();
-}
+window.electronAPI.onGetChatText((obj) => {
+  let name = obj.author;
+  let content = obj.message;
+  let chatBadges = obj.chatBadges;
+  let chatDivEl = document.getElementById("chatDiv");
+  
+  if(chatDivEl){
+    let newLi = document.createElement("li");
+  
+    let nameSpan = document.createElement("span");
+    nameSpan.insertAdjacentHTML("beforeend", name);
+    nameSpan.insertAdjacentHTML("beforeend", chatBadges);
+    nameSpan.classList.add("nameContainer");
+    nameSpan.title = "The background color here is the same as the hover color."
+  
+    let invisibleLetter = document.createElement("span");
+    invisibleLetter.textContent = "l";
+    invisibleLetter.classList.add("invLetter");
+  
+    nameSpan.appendChild(invisibleLetter);
+    newLi.appendChild(nameSpan);
+    newLi.insertAdjacentHTML("beforeend", content);
+    chatDivEl.appendChild(newLi);
+    newLi.scrollIntoView(scrollIntoViewOptions = {behavior: "smooth"});
+  }
+  else window.electronAPI.stopChat();
+})
 
-const setReadOnlyFormEl = () => setElement(streamConnectFormEl, "formContainer", "readOnlyForm", afterReadOnlyFormEL);
-
-function afterReadOnlyFormEL(){
-  let formEl = document.getElementById("readOnlyForm");
-  formEl["apiKey"].value = settings["apiKey"];
-  formEl["youtubeID"].value = settings["youtubeID"];
-}
-
-const setReadWriteFormEl = () => setElement(streamConnectFormEl, "formContainer", "readWriteForm", afterReadWriteFormEl);
-
-function afterReadWriteFormEl(){
-  let formEl = document.getElementById("readWriteForm");
-  formEl["youtubeID"].value = settings["youtubeID"];
-}
+const setStreamConnectFormEl = () => setElement(streamConnectFormEl, "main", "streamConnectForm");
 
 const setPaintSettingsEl = () => setElement(appearanceSettingsFormEl, "main", "appearanceSettingsForm", afterSetPaintSettingsEl);
 
 function afterSetPaintSettingsEl(){
-  continueChatLoop = false;
-  let style = getComputedStyle(document.body);
-  document.getElementById("bgColor").value = style.getPropertyValue("--bgColor");
-  document.getElementById("hoverColor").value = style.getPropertyValue("--hoverColor");
-  document.getElementById("borderColor").value = style.getPropertyValue("--borderColor");
-  document.getElementById("textColor").value = style.getPropertyValue("--textColor");
-  document.getElementById("opacityRange").value = settings["opacity"];
-  setChatFontSizeValue(style.getPropertyValue("--chatFontSize"));
+  document.getElementById("bgColor").value = settings["bgColor"];
+  document.getElementById("hoverColor").value = settings["hoverColor"];
+  document.getElementById("borderColor").value = settings["borderColor"];
+  document.getElementById("textColor").value = settings["textColor"];
+  document.getElementById("opacity").value = settings["opacity"];
+  setChatFontSizeValue(settings["chatFontSize"]);
   jscolor.install("#appearanceSettingsForm");
 }

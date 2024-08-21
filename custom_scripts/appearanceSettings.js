@@ -1,14 +1,18 @@
 
 var bgColorInRGB = null;
 
-function setGlobalCSSVarAndBodyOpacity(){
-  for(appearanceSetting of ["bgColor","hoverColor","borderColor","textColor","chatFontSize","bodyBorderWidth"]){
-    document.querySelector(':root').style.setProperty(`--${appearanceSetting}`, settings[appearanceSetting]);
-  }
+function setAppearance(){
+  document.querySelector(':root').style.setProperty("--bgColor", settings["bgColor"]);
+  document.querySelector(':root').style.setProperty("--hoverColor", settings["hoverColor"]);
+  document.querySelector(':root').style.setProperty("--borderColor", settings["borderColor"]);
+  document.querySelector(':root').style.setProperty("--textColor", settings["textColor"]);
+  document.querySelector(':root').style.setProperty("--chatFontSize", settings["chatFontSize"]);
   bgColorInRGB = hexToRgb(settings["bgColor"]);
   document.getElementById("main").style.backgroundColor = `rgba(
-    ${bgColorInRGB.r}, ${bgColorInRGB.g}, ${bgColorInRGB.b}, ${settings["opacity"]}
+    ${bgColorInRGB.r},${bgColorInRGB.g},${bgColorInRGB.b},${settings["opacity"]}
   )`;
+  document.querySelector(':root').style.setProperty("--bodyBorderWidth", settings["bodyBorderWidth"]);
+
 }
 
 function hexToRgb(hex) {
@@ -24,7 +28,9 @@ function setBgColor(event){
   document.querySelector(':root').style.setProperty("--bgColor", event.target.value);
   settings["bgColor"] = event.target.value;
   bgColorInRGB = hexToRgb(event.target.value);
-  document.getElementById("main").style.backgroundColor = `rgba(${bgColorInRGB.r},${bgColorInRGB.g},${bgColorInRGB.b},${settings["opacity"]})`;
+  document.getElementById("main").style.backgroundColor = `rgba(
+    ${bgColorInRGB.r},${bgColorInRGB.g},${bgColorInRGB.b},${settings["opacity"]}
+  )`;
   enableSaveButton();
 }
 
@@ -56,9 +62,19 @@ function setFontSize(newFontSize){
   setChatFontSizeValue(newFontSize);
 }
 
+function getJsColorSettings(){
+  return JSON.stringify({
+    backgroundColor: settings["bgColor"],
+    borderColor: settings["borderColor"],
+    controlBorderColor: settings["borderColor"]
+  })
+}
+
 function setOpacity(event){
-  document.querySelector(':root').style.setProperty("--opacity", event.target.value);
   saveSetting(event);
+  document.getElementById("main").style.backgroundColor = `rgba(
+    ${bgColorInRGB.r},${bgColorInRGB.g},${bgColorInRGB.b},${settings["opacity"]}
+  )`;
 }
 
 function toggleBorder(event){
@@ -74,19 +90,47 @@ function toggleBorder(event){
   }
 }
 
+function setChatFontSizeValue(chatFontSize){
+  switch(chatFontSize){
+    case "12px":
+      document.getElementById("chatFontSize").value = "Very Small";
+      break;
+    case "14px":
+      document.getElementById("chatFontSize").value = "Small";
+      break;
+    case "16px":
+      document.getElementById("chatFontSize").value = "Normal";
+      break;
+    case "18px":
+      document.getElementById("chatFontSize").value = "Big";
+      break;
+    case "20px":
+      document.getElementById("chatFontSize").value = "Very Big";
+      break;
+    default:
+      alert("Error with font size value");
+  }
+}
+
 function resetAppearance(event){
   event.preventDefault();
 
-  for(appearanceSetting of ["bgColor","hoverColor","borderColor","textColor"]){
-    settings[appearanceSetting] = defaultSettings[appearanceSetting];
+  let colorSettings = ["bgColor","hoverColor","borderColor","textColor"];
+  for(appearanceSetting of colorSettings){
     document.getElementById(appearanceSetting).value = defaultSettings[appearanceSetting];
     document.getElementById(appearanceSetting).jscolor.fromString(defaultSettings[appearanceSetting]);
   }
+  for(appearanceSetting of [...colorSettings, "chatFontSize","bodyBorderWidth","chatFontSize"]){
+    settings[appearanceSetting] = defaultSettings[appearanceSetting];
+    document.querySelector(':root').style.setProperty(`--${appearanceSetting}`, settings[appearanceSetting]);
+  }
 
-  settings["opacity"] = defaultSettings["opacity"];
-  document.getElementById("opacityRange").value = defaultSettings["opacity"];
+  document.getElementById("opacity").value = defaultSettings["opacity"];
+  bgColorInRGB = hexToRgb(defaultSettings["bgColor"]);
+  document.getElementById("main").style.backgroundColor = `rgba(
+    ${bgColorInRGB.r}, ${bgColorInRGB.g}, ${bgColorInRGB.b}, ${defaultSettings["opacity"]}
+  )`;
 
-  settings["bodyBorderWidth"] = defaultSettings["bodyBorderWidth"];
+  setChatFontSizeValue(defaultSettings["chatFontSize"]);
 
-  setGlobalCSSVarAndBodyOpacity();
 }

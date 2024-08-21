@@ -13,7 +13,7 @@ function setGlobalVarForSettings(){
 
 function afterGetSettings(res){
   settings = res;
-  setGlobalCSSVarAndBodyOpacity();
+  setAppearance();
 }
 
 function saveSetting(event){
@@ -52,42 +52,35 @@ function setTopButton(){
   };
 }
 
-function setChatFontSizeValue(chatFontSize){
-  if (chatFontSize === "12px")
-    document.getElementById("chatFontSize").value = "Very Small";
-  else if (chatFontSize === "14px")
-    document.getElementById("chatFontSize").value = "Small";
-  else if (chatFontSize === "16px")
-    document.getElementById("chatFontSize").value = "Normal";
-  else if (chatFontSize === "18px")
-    document.getElementById("chatFontSize").value = "Big";
-  else
-    document.getElementById("chatFontSize").value = "Very Big";
-}
-
 function setKeyDownSettings(){
   document.onkeydown = (event) => {
-    if(event.ctrlKey && (event.code === "KeyO")){
-      let optionsEl = document.getElementById("options");
-      if(getComputedStyle(optionsEl).display === "none") {
-        optionsEl.style.display = "grid";
-        window.setTimeout(()=>optionsEl.style.opacity = "1", 1);
-      }
-      else {
-        optionsEl.style.opacity = "0";
-        window.setTimeout(()=>optionsEl.style.display = "none", 500);
-      }
-    }
-    if(event.ctrlKey && (event.code === "KeyF")){
-      let footerEl = document.getElementById("footer");
-      if(getComputedStyle(footerEl).display === "none") {
-        footerEl.style.display = "flex";
-        window.setTimeout(()=> footerEl.style.opacity = "1", 1);
-      }
-      else {
-        footerEl.style.opacity = "0";
-        window.setTimeout(()=> footerEl.style.display = "none", 500);
-      }
-    }
+    if(event.ctrlKey && (event.code === "KeyO"))
+      toggleOptions();
+    if(event.ctrlKey && (event.code === "KeyF"))
+      toggleFooter();
+  }
+}
+
+function toggleOptions(){
+  let optionsEl = document.getElementById("options");
+  if(getComputedStyle(optionsEl).display === "none") {
+    optionsEl.style.display = "grid";
+    window.setTimeout(()=>optionsEl.style.opacity = "1", 1);
+  }
+  else {
+    optionsEl.style.opacity = "0";
+    window.setTimeout(()=>optionsEl.style.display = "none", 500);
+  }
+}
+
+function toggleFooter(){
+  let footerEl = document.getElementById("footer");
+  if(getComputedStyle(footerEl).display === "none") {
+    footerEl.style.display = "flex";
+    window.setTimeout(()=> footerEl.style.opacity = "1", 1);
+  }
+  else {
+    footerEl.style.opacity = "0";
+    window.setTimeout(()=> footerEl.style.display = "none", 500);
   }
 }
