@@ -1,6 +1,6 @@
 {
   "name": "uchat",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "An app for viewing chats of a stream",
   "main": "index.js",
   "scripts": {
@@ -34,8 +34,10 @@
     "@eastdesire/jscolor": "^2.5.2",
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2",
+    "cors": "^2.8.5",
     "electron-drag": "^2.0.0",
     "electron-squirrel-startup": "^1.0.1",
+    "express": "^4.19.2",
     "google-auth-library": "^9.13.0",
     "jsonfile": "^6.1.0",
     "open": "^10.1.0",

@@ -6,13 +6,12 @@ function setAppearance(){
   document.querySelector(':root').style.setProperty("--hoverColor", settings["hoverColor"]);
   document.querySelector(':root').style.setProperty("--borderColor", settings["borderColor"]);
   document.querySelector(':root').style.setProperty("--textColor", settings["textColor"]);
-  document.querySelector(':root').style.setProperty("--chatFontSize", settings["chatFontSize"]);
+  document.querySelector(':root').style.setProperty("--opacity", settings["opacity"]);
   bgColorInRGB = hexToRgb(settings["bgColor"]);
   document.getElementById("main").style.backgroundColor = `rgba(
     ${bgColorInRGB.r},${bgColorInRGB.g},${bgColorInRGB.b},${settings["opacity"]}
   )`;
   document.querySelector(':root').style.setProperty("--bodyBorderWidth", settings["bodyBorderWidth"]);
-
 }
 
 function hexToRgb(hex) {
@@ -49,19 +48,6 @@ function setTextColor(event){
   saveSetting(event);
 }
 
-function toggleChatFontOptions(){
-  if (document.getElementById("chatFontOptions").style.display === "block")
-    document.getElementById("chatFontOptions").style.display = "none";
-  else document.getElementById("chatFontOptions").style.display = "block";
-}
-
-function setFontSize(newFontSize){
-  document.querySelector(':root').style.setProperty("--chatFontSize", newFontSize);  
-  document.getElementById("chatFontOptions").style.display = "none";
-  saveSetting({target:{id: "chatFontSize", value: newFontSize}});
-  setChatFontSizeValue(newFontSize);
-}
-
 function getJsColorSettings(){
   return JSON.stringify({
     backgroundColor: settings["bgColor"],
@@ -75,6 +61,7 @@ function setOpacity(event){
   document.getElementById("main").style.backgroundColor = `rgba(
     ${bgColorInRGB.r},${bgColorInRGB.g},${bgColorInRGB.b},${settings["opacity"]}
   )`;
+  document.querySelector(':root').style.setProperty("--opacity", settings["opacity"]);
 }
 
 function toggleBorder(event){
@@ -90,28 +77,6 @@ function toggleBorder(event){
   }
 }
 
-function setChatFontSizeValue(chatFontSize){
-  switch(chatFontSize){
-    case "12px":
-      document.getElementById("chatFontSize").value = "Very Small";
-      break;
-    case "14px":
-      document.getElementById("chatFontSize").value = "Small";
-      break;
-    case "16px":
-      document.getElementById("chatFontSize").value = "Normal";
-      break;
-    case "18px":
-      document.getElementById("chatFontSize").value = "Big";
-      break;
-    case "20px":
-      document.getElementById("chatFontSize").value = "Very Big";
-      break;
-    default:
-      alert("Error with font size value");
-  }
-}
-
 function resetAppearance(event){
   event.preventDefault();
 
@@ -120,7 +85,7 @@ function resetAppearance(event){
     document.getElementById(appearanceSetting).value = defaultSettings[appearanceSetting];
     document.getElementById(appearanceSetting).jscolor.fromString(defaultSettings[appearanceSetting]);
   }
-  for(appearanceSetting of [...colorSettings, "chatFontSize","bodyBorderWidth","chatFontSize"]){
+  for(appearanceSetting of [...colorSettings, "bodyBorderWidth","opacity"]){
     settings[appearanceSetting] = defaultSettings[appearanceSetting];
     document.querySelector(':root').style.setProperty(`--${appearanceSetting}`, settings[appearanceSetting]);
   }
@@ -130,7 +95,5 @@ function resetAppearance(event){
   document.getElementById("main").style.backgroundColor = `rgba(
     ${bgColorInRGB.r}, ${bgColorInRGB.g}, ${bgColorInRGB.b}, ${defaultSettings["opacity"]}
   )`;
-
-  setChatFontSizeValue(defaultSettings["chatFontSize"]);
 
 }

@@ -27,19 +27,18 @@
     <!--Google API for Youtube-->
     <script src="https://apis.google.com/js/api.js"></script>
     <!--Load my stuff-->
-    <link rel="stylesheet" href="index.css">
-    <script src="./custom_scripts/setComponents.js"></script>
-    <script src="./custom_scripts/appearanceSettings.js"></script>
-    <script src="./custom_scripts/streamConnectSettings.js"></script>
-    <script src="./custom_scripts/settings.js"></script>
-    <script src="./custom_scripts/onload.js"></script>
+    <link rel="stylesheet" href="/index.css">
+    <script src="/custom_scripts/setComponents.js"></script>
+    <script src="/custom_scripts/appearanceSettings.js"></script>
+    <script src="/custom_scripts/streamConnectSettings.js"></script>
+    <script src="/custom_scripts/settings.js"></script>
+    <script src="/custom_scripts/onload.js"></script>
   </head>
   <body>
     <div id="options">
-      <button onclick="setFooterEl1()" id="settingsButton">Settings</button>
-      <button id="closeButton">Close</button>
-      <div id="dragDiv">Drag</div>
       <button id="donateButton" onclick="window.electronAPI.goToDonation()">Donate</button>
+      <div id="dragDiv">Drag</div>
+      <button id="closeButton">Close</button>
       <button id="onTopButton">Enable Always On Top</button>
     </div>
     <main id="main"></main>

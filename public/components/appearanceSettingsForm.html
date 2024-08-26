@@ -16,17 +16,6 @@
   <div class="inputContainer">
     <input name="textColor" id="textColor" onchange="setTextColor(event)" data-jscolor="" />
   </div>
-  <label for="chatFontSize">Chat Font Size:</label>
-  <div class="inputContainer">
-    <input name="chatFontSize" id="chatFontSize" onclick="toggleChatFontOptions()" readonly></input>
-    <ul id="chatFontOptions">
-      <li onclick="setFontSize('12px')">Very Small</li>
-      <li onclick="setFontSize('14px')">Small</li>
-      <li onclick="setFontSize('16px')">Normal</li>
-      <li onclick="setFontSize('18px')">Big</li>
-      <li onclick="setFontSize('20px')">Very Big</li>
-    </ul>
-  </div>
   <label for="opacity">Opacity:</label>
   <div class="inputContainer">
     <input name="opacity" id="opacity" type="range" min="0" max="1" step="0.1" onchange="setOpacity(event)" />

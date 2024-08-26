@@ -1,9 +1,8 @@
 
 window.onload = () => {
-  setFooterEl1();
-  setGlobalVarForSettings();
+  setFooterEl();
   setChatDiv();
-  setCloseButton();
+  setGlobalVarForSettings();
   setTopButton();
   setKeyDownSettings();
 }

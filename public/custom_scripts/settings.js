@@ -3,10 +3,10 @@ var settings = {};
 var defaultSettings = {};
 
 function setGlobalVarForSettings(){
-  fetch("./settings.json")
+  fetch("/settings.json")
   .then(res => res.json())
   .then(res => afterGetSettings(res));
-  fetch("./defaultSettings.json")
+  fetch("/defaultSettings.json")
   .then(res => res.json())
   .then(res => defaultSettings = res);
 }
@@ -34,12 +34,6 @@ function enableSaveButton(){
   saveButton.textContent = "Save";
 }
 
-function setCloseButton() {
-  document.getElementById("closeButton").onclick = ()=>{
-    window.electronAPI.close();
-  };
-}
-
 function setTopButton(){
   var onTopBool = false;
   document.getElementById("onTopButton").onclick = ()=>{
@@ -63,24 +57,16 @@ function setKeyDownSettings(){
 
 function toggleOptions(){
   let optionsEl = document.getElementById("options");
-  if(getComputedStyle(optionsEl).display === "none") {
-    optionsEl.style.display = "grid";
-    window.setTimeout(()=>optionsEl.style.opacity = "1", 1);
-  }
-  else {
-    optionsEl.style.opacity = "0";
-    window.setTimeout(()=>optionsEl.style.display = "none", 500);
-  }
+  if(getComputedStyle(optionsEl).height === "0px") 
+    document.querySelector(':root').style.setProperty("--optionsHeight", "62px");
+  else 
+    document.querySelector(':root').style.setProperty("--optionsHeight", "0px");
 }
 
 function toggleFooter(){
   let footerEl = document.getElementById("footer");
-  if(getComputedStyle(footerEl).display === "none") {
-    footerEl.style.display = "flex";
-    window.setTimeout(()=> footerEl.style.opacity = "1", 1);
-  }
-  else {
-    footerEl.style.opacity = "0";
-    window.setTimeout(()=> footerEl.style.display = "none", 500);
-  }
+  if(getComputedStyle(footerEl).height === "4px") 
+    document.querySelector(':root').style.setProperty("--footerHeight", "60px");
+  else 
+    document.querySelector(':root').style.setProperty("--footerHeight", "0px");
 }
