@@ -46,27 +46,18 @@ function setTopButton(){
   };
 }
 
-function setKeyDownSettings(){
-  document.onkeydown = (event) => {
-    if(event.ctrlKey && (event.code === "KeyO"))
-      toggleOptions();
-    if(event.ctrlKey && (event.code === "KeyF"))
-      toggleFooter();
-  }
-}
-
-function toggleOptions(){
+window.electronAPI.showOptions(() => {
   let optionsEl = document.getElementById("options");
   if(getComputedStyle(optionsEl).height === "0px") 
     document.querySelector(':root').style.setProperty("--optionsHeight", "62px");
   else 
     document.querySelector(':root').style.setProperty("--optionsHeight", "0px");
-}
+});
 
-function toggleFooter(){
+window.electronAPI.showFooter(() => {
   let footerEl = document.getElementById("footer");
   if(getComputedStyle(footerEl).height === "4px") 
     document.querySelector(':root').style.setProperty("--footerHeight", "60px");
   else 
     document.querySelector(':root').style.setProperty("--footerHeight", "0px");
-}
+});

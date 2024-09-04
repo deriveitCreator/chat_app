@@ -4,5 +4,4 @@ window.onload = () => {
   setChatDiv();
   setGlobalVarForSettings();
   setTopButton();
-  setKeyDownSettings();
 }

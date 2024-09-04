@@ -37,8 +37,13 @@ This app makes its own server at port 3001, so make sure port 3001 is available.
 
 Versioning is done using "npm version [new-version] --git-tag-version false"
 
+update 5.1:
+- Shortcut Keys was not working when Youtube iframe was in focus. That is fixed now.
+- Window position and size is now also saved.
+- Added `onclick` function to close buttons.
+
 update 5.0:
-- Removed Google OAuth and Web Scraping because I did not want to violate youtube TOS.
+- Removed Google OAuth and web Scraping because I did not want to violate youtube TOS.
 - Using iFrame instead.
 
 update 4.0:

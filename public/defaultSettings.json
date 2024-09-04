@@ -5,5 +5,9 @@
   "textColor":"#444477",
   "chatFontSize":"16px",
   "opacity":"1",
-  "bodyBorderWidth": "4px"
+  "bodyBorderWidth": "4px",
+  "width": 500,
+  "height": 700,
+  "x":0,
+  "y":0
 }

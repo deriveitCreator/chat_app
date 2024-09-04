@@ -1,21 +1,31 @@
-const { app, BrowserWindow, ipcMain } = require('electron/main');
+const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron/main');
 const path = require('node:path')
 const jsonfile = require('jsonfile')
 const { shell } = require('electron');
-const express = require('express')
+const express = require('express');
 
 var win = null;
 const expressApp = express();
 var server = null;
 
 function createWindow () {
+  var settings = null;
+  try{
+    settings = jsonfile.readFileSync('./public/settings.json');
+  }
+  catch{
+    closeFunc();
+  }
+
   win = new BrowserWindow({
-    width: 500,
-    height: 700,
     minWidth: 300,
     resizable: true,
     frame: false,
     transparent: true,
+    width: settings.width,
+    height: settings.height,
+    x: settings.x,
+    y: settings.y,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -32,14 +42,15 @@ function createWindow () {
   });
 
   ipcMain.on('save-settings', (event, settings) => {
-    jsonfile.writeFile('./settings.json', settings, { spaces: 2 }, err => {
-      if (err) console.error(err)
-    });
+    jsonfile.writeFile('./public/settings.json', settings, { spaces: 2 })
+    .catch((err) => showError("Error when saving settings", err.message));
   });
   
-  ipcMain.on('close', async (event) => {
-    win.close();
-  });
+  ipcMain.on('close', closeFunc);
+
+  win.on('resized', saveNewSize);
+
+  win.on('moved', saveNewPos);
 
   win.loadURL('http://127.0.0.1:3001/');
 
@@ -58,10 +69,68 @@ app.whenReady().then( async () => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+  
+  let  menu = Menu.getApplicationMenu();
+  menu.append(new MenuItem({
+    label: 'Show Options',
+    submenu: [{
+      role: 'help',
+      accelerator: 'Ctrl+O',
+      click: () => win.webContents.send("show-options")
+    }]
+  }));
+  menu.append(new MenuItem({
+    label: 'Show Footer',
+    submenu: [{
+      role: 'help',
+      accelerator: 'Ctrl+F',
+      click: () => win.webContents.send("show-footer")
+    }]
+  }));
+  Menu.setApplicationMenu(menu);
 
 });
 
-app.on('window-all-closed', async () => {
-  server.close();
+app.on('window-all-closed', closeFunc);
+
+function saveNewSize(){
+  let size = win.getSize();
+  let newWidth = size[0];
+  let newHeight = size[1];
+  jsonfile.readFile('./public/settings.json')
+  .then(settings => {
+    settings.width = newWidth;
+    settings.height = newHeight;
+    jsonfile.writeFile('./public/settings.json', settings, { spaces: 2 })
+    .catch((err) => showError("Error when saving new size", err.message));
+  })
+  .catch((err) => showError("Error when reading settings.json", err.message));
+}
+
+function saveNewPos(){
+  let size = win.getPosition();
+  let posX = size[0];
+  let posY = size[1];
+  jsonfile.readFile('./public/settings.json')
+  .then(settings => {
+    settings.x = posX;
+    settings.y = posY;
+    jsonfile.writeFile('./public/settings.json', settings, { spaces: 2 })
+    .catch((err) => showError("Error when saving new position", err.message));
+  })
+  .catch((err) => showError("Error when reading settings.json", err.message));
+}
+
+async function showError(errTitle, errString){
+  try{
+    dialog.showErrorBox(errTitle, errString );
+  }
+  catch (err) {
+    console.error(err);
+  }
+}
+
+async function closeFunc(){
+  if (server) server.close();
   app.quit();
-});
+}
