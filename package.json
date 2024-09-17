@@ -1,6 +1,6 @@
 {
   "name": "uchat",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "description": "An app for viewing chats of a stream",
   "main": "index.js",
   "scripts": {

@@ -8,10 +8,12 @@ var win = null;
 const expressApp = express();
 var server = null;
 
+const JSON_LOC = "./static/settings.json";
+
 function createWindow () {
   var settings = null;
   try{
-    settings = jsonfile.readFileSync('./public/settings.json');
+    settings = jsonfile.readFileSync(JSON_LOC);
   }
   catch{
     closeFunc();
@@ -42,7 +44,7 @@ function createWindow () {
   });
 
   ipcMain.on('save-settings', (event, settings) => {
-    jsonfile.writeFile('./public/settings.json', settings, { spaces: 2 })
+    jsonfile.writeFile(JSON_LOC, settings, { spaces: 2 })
     .catch((err) => showError("Error when saving settings", err.message));
   });
   
@@ -59,7 +61,7 @@ function createWindow () {
 app.whenReady().then( async () => {
 
   try{
-    expressApp.use(express.static('public'));    
+    expressApp.use(express.static('static'));    
     server = expressApp.listen(3001, createWindow);
   }
   catch (err) {
@@ -97,11 +99,11 @@ function saveNewSize(){
   let size = win.getSize();
   let newWidth = size[0];
   let newHeight = size[1];
-  jsonfile.readFile('./public/settings.json')
+  jsonfile.readFile(JSON_LOC)
   .then(settings => {
     settings.width = newWidth;
     settings.height = newHeight;
-    jsonfile.writeFile('./public/settings.json', settings, { spaces: 2 })
+    jsonfile.writeFile(JSON_LOC, settings, { spaces: 2 })
     .catch((err) => showError("Error when saving new size", err.message));
   })
   .catch((err) => showError("Error when reading settings.json", err.message));
@@ -111,11 +113,11 @@ function saveNewPos(){
   let size = win.getPosition();
   let posX = size[0];
   let posY = size[1];
-  jsonfile.readFile('./public/settings.json')
+  jsonfile.readFile(JSON_LOC)
   .then(settings => {
     settings.x = posX;
     settings.y = posY;
-    jsonfile.writeFile('./public/settings.json', settings, { spaces: 2 })
+    jsonfile.writeFile(JSON_LOC, settings, { spaces: 2 })
     .catch((err) => showError("Error when saving new position", err.message));
   })
   .catch((err) => showError("Error when reading settings.json", err.message));
